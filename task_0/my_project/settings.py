@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'profile_app',
 ]
+
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -121,3 +129,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Access the profile data from environment variables
+PROFILE_EMAIL = os.getenv('MY_EMAIL')
+PROFILE_NAME = os.getenv('MY_NAME')
+PROFILE_STACK = os.getenv('MY_STACK')
