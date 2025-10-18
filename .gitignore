@@ -1,0 +1,28 @@
+# 1. Virtual Environment
+# Excludes the Python virtual environment folder
+**my_venv**
+venv/
+
+# 2. Local Configuration & Sensitive Data (CRITICAL)
+# This prevents your actual profile data from being uploaded to GitHub
+.env
+
+# 3. Python Compiled Files
+# Bytecode files created when Python runs code
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 4. Operating System & Editor Files
+.DS_Store # macOS system file
+*.swp     # Vim swap files
+.vscode/  # Visual Studio Code settings (often local preferences)
+
+# 5. Django/Database Files
+# Excludes the default SQLite database (contains local data)
+db.sqlite3
+
+# 6. Build/Dependency Files 
+dist/
+build/
