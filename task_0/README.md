@@ -8,7 +8,7 @@ A simple RESTful GET endpoint built with Django that returns user profile inform
 | :--- | :--- | :--- |
 | `GET` | `/me` | Returns profile data, a dynamic UTC timestamp, and a random cat fact. |
 
-## 🚀 Setup and Local Run Instructions
+## Setup and Local Run Instructions
 
 These instructions assume you have Python 3.x installed.
 
@@ -26,10 +26,17 @@ The required dependencies are listed in requirements.txt
 ``` bash
 pip install -r requirements.txt
 ```
-- Dependencies:
+### 3 Environment Variables (Configuration)
+create a file named `.env` in the project root directory and define your profile information.Note: This file is intentionally excluded from the repository via .gitignore 
 
-Django: Web framework.
+```code 
+# .enc file content
+MY_EMAIL ="[Your Personal Email]"
+MY_NAME="[Your Full Name]"
+MY_STACK="Python/Django"
+```
 
-requests: Library for making external API calls.
-
-python-dotenv: Library for loading configuration from the .env file
+### 4.Run the Server 
+``` bash
+python manage.py runserver 
+```
