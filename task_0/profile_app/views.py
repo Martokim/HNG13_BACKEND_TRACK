@@ -33,12 +33,18 @@ def profile_endpoint(request):
     
     # 4. Construct the final JSON response
     response_data = {
-        'full_name': settings.PROFILE_NAME,
-        'email': settings.PROFILE_EMAIL,
-        'stack': settings.PROFILE_STACK,
-        'current_utc_time': current_utc_time,
-        'cat_fact': cat_fact,
-        'status': 'success'
+        'status': 'success',
+        # ----------------------------------------------------
+        # NESTED USER OBJECT (Required structure change)
+        'user': {
+            'email': settings.PROFILE_EMAIL,
+            'name': settings.PROFILE_NAME,  # Rename from 'full_name'
+            'stack': settings.PROFILE_STACK
+        },
+        # ----------------------------------------------------
+        # RENAMED KEYS
+        'timestamp': current_utc_time,  # Correct key name
+        'fact': cat_fact                # Correct key name
     }
 
     # 5. Return the JSON response
