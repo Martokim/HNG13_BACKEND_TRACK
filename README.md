@@ -5,6 +5,20 @@ This is the Stage 0 API for the HNG 13 Backend Track.
 The successfully deployed API endpoint is available on Render:
 
 `https://hng13-backend-track.onrender.com/me`
+## Sample Response Format:
+
+``` json
+{
+  "status": "success",
+  "user": {
+    "email": "your-email@example.com",
+    "name": "Your Full Name",
+    "stack": "Python/Django"
+  },
+  "timestamp": "2025-10-15T12:34:56.789Z",
+  "fact": "Cats sleep 70% of their lives."
+}
+```
 
 ## Features
 This API endpoint performs the following actions:
