@@ -1,10 +1,15 @@
 [build]
-# Explicitly set the path to the project directory for the builder
+# Set the root directory for the build process
 rootDirectory = "task_1"
 
-# Explicitly use the Python builder
-builder = "nixpacks"
+# Explicitly tell Nixpacks to use the Python builder
+
+builder = "nixpacks" 
+
+# Define a custom build command to ensure pip install and migration run.
+buildCommand = "pip install -r requirements.txt && python manage.py migrate"
 
 [deploy]
-# Run migrations before the server starts
-startCommand = "python manage.py migrate && gunicorn string_analyzer.wsgi --log-file -"
+# Define the start command (the server)
+startCommand = "gunicorn string_analyzer.wsgi --log-file -"
+
