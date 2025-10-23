@@ -1,0 +1,10 @@
+[build]
+# Explicitly set the path to the project directory for the builder
+rootDirectory = "task_1"
+
+# Explicitly use the Python builder
+builder = "nixpacks"
+
+[deploy]
+# Run migrations before the server starts
+startCommand = "python manage.py migrate && gunicorn string_analyzer.wsgi --log-file -"
