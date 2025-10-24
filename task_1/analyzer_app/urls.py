@@ -7,5 +7,5 @@ urlpatterns = [
     
     # GET /strings/{value} and DELETE /strings/{value}
     # This uses a path converter that requires the path parameter to be a string
-    path('/<str:string_value>', StringDetailView.as_view(), name='string-detail'), 
+    path('<str:string_value>/', StringDetailView.as_view(), name='string-detail'), 
 ]

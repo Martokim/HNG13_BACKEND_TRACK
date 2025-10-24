@@ -19,7 +19,7 @@ class StringListCreateView(APIView):
         input_serializer = StringInputSerializer(data=request.data)
         if not input_serializer.is_valid():
             # Returns 400 or 422 if 'value' is missing or not a string
-            return Response(input_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(input_serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
         string_value = input_serializer.validated_data['value']
         
