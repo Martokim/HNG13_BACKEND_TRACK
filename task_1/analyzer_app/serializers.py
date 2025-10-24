@@ -5,7 +5,24 @@ class StringInputSerializer(serializers.Serializer):
     """
     Serializer used only for validating the input JSON {"value": "string"}
     """
-    value = serializers.CharField(required=True, max_length=10000) 
+    value = serializers.CharField(required=True, max_length=500) 
+
+    def to_internal_value(self, data):
+        # Check if the 'value' key exists in the raw input data
+        if 'value' in data:
+            raw_value = data['value']
+            
+            # Check the actual type of the raw input
+            if not isinstance(raw_value, str):
+                # Manually raise a validation error here. 
+                # This bypasses default coercion and forces a failure.
+                raise serializers.ValidationError({
+                    'value': ['Invalid data type. Expected a string.']
+                })
+        
+        # Now that we've confirmed the type, let the parent method handle 
+        # the rest of the deserialization and validation.
+        return super().to_internal_value(data)
     
     def validate_value(self, value):
         # 422 Unprocessable Entity for invalid data type (handled by CharField)
