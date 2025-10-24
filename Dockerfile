@@ -23,4 +23,4 @@ EXPOSE 8000
 
 # 8. Define the command to run the application using Gunicorn
 # This is the equivalent of the Custom Start Command
-CMD ["gunicorn", "string_analyzer.wsgi:application", "--bind", "0.0.0.0:$PORT", "--log-file", "-"]
+CMD gunicorn string_analyzer.wsgi:application --bind 0.0.0.0:$PORT --log-file -
