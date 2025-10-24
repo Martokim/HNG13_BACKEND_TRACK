@@ -19,9 +19,7 @@ class StringInputSerializer(serializers.Serializer):
                 raise serializers.ValidationError({
                     'value': ['Invalid data type. Expected a string.']
                 })
-        
-        # Now that we've confirmed the type, let the parent method handle 
-        # the rest of the deserialization and validation.
+
         return super().to_internal_value(data)
     
     def validate_value(self, value):
