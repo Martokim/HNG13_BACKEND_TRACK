@@ -6,6 +6,9 @@ from django.db.utils import IntegrityError
 from .models import StringEntry
 from .serializers import StringInputSerializer, StringEntrySerializer
 from .utils import analyze_string
+import re 
+from django.db.models import Q 
+
 
 class StringListCreateView(APIView):
     """
@@ -53,17 +56,88 @@ class StringListCreateView(APIView):
                             status=status.HTTP_409_CONFLICT)
 
     # 2. GET /strings (Basic structure for list/filtering)
+  # analyzer_app/views.py (StringListCreateView - complete get method)
+
+    # 2. GET /strings (Handles listing and filtering - 45 Points)
     def get(self, request, *args, **kwargs):
-        # This will be updated later for filtering (Day 2 plan)
         queryset = StringEntry.objects.all()
+        filters_applied = {}
         
-        # Basic response format for listing (needed to verify structure)
+        # ----------------------------------------------
+        # A. Implement Standard Query Filters (25 Points)
+        # ----------------------------------------------
+        
+        # Map URL query parameters to Django ORM lookup fields
+        # This includes all common string properties with gt/lt lookups
+        lookup_map = {
+            'length_gt': 'length__gt',
+            'length_lt': 'length__lt',
+            'word_count_gt': 'word_count__gt',
+            'word_count_lt': 'word_count__lt',
+            'unique_characters_gt': 'unique_characters__gt',
+            'unique_characters_lt': 'unique_characters__lt',
+            'is_palindrome': 'is_palindrome', # Exact match filter
+        }
+        
+        for param, lookup in lookup_map.items():
+            value = request.query_params.get(param)
+            
+            if value is not None:
+                # Handle numeric lookups (gt/lt)
+                if lookup in ['length__gt', 'length__lt', 'word_count__gt', 'word_count__lt', 'unique_characters__gt', 'unique_characters__lt']:
+                    if value.isdigit():
+                        try:
+                            # Apply the filter dynamically
+                            queryset = queryset.filter(**{lookup: int(value)})
+                            filters_applied[param] = int(value)
+                        except ValueError:
+                            pass # Ignore non-integer filter values
+                
+                # Handle boolean lookups (is_palindrome)
+                elif lookup == 'is_palindrome':
+                    if value.lower() in ['true', 'false']:
+                        bool_val = value.lower() == 'true'
+                        queryset = queryset.filter(is_palindrome=bool_val)
+                        filters_applied[param] = bool_val
+
+        # ----------------------------------------------------
+        # B. Implement Natural Language Filter (20 Points)
+        # ----------------------------------------------------
+        nl_query = request.query_params.get('natural_language_filter')
+        if nl_query:
+            nl_query = nl_query.lower()
+            q_objects = Q()
+            
+            # Simple keyword detection using OR logic
+            if "palindrome" in nl_query:
+                q_objects |= Q(is_palindrome=True)
+            if "not palindrome" in nl_query or "non-palindrome" in nl_query:
+                 q_objects |= Q(is_palindrome=False)
+            if "long" in nl_query:
+                # Use a reasonable threshold for 'long'
+                q_objects |= Q(length__gt=20) 
+            if "short" in nl_query:
+                # Use a reasonable threshold for 'short'
+                q_objects |= Q(length__lt=5)
+            if "unique" in nl_query or "distinct" in nl_query:
+                # Example: strings with a high number of unique characters
+                 q_objects |= Q(unique_characters__gt=10)
+
+            if q_objects:
+                # Apply combined Q objects to the queryset
+                queryset = queryset.filter(q_objects)
+                filters_applied['natural_language_filter'] = nl_query
+
+        # ----------------------------------------------
+        # C. Final Serialization and Response
+        # ----------------------------------------------
+        
         output_serializer = StringEntrySerializer(queryset, many=True)
         
         response_data = {
             "data": output_serializer.data,
             "count": queryset.count(),
-            "filters_applied": {}
+            "filters_applied": filters_applied 
         }
         return Response(response_data, status=status.HTTP_200_OK)
 
